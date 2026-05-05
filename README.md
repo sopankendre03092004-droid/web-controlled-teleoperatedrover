@@ -1,2 +1,28 @@
 # web-controlled-teleoperatedrover
 Web-controlled teleoperated intelligent rover for hazardous environment monitoring using Raspberry Pi, IoT, sensors, and YOLO-based object detection.
+# Intelligent Teleoperated Rover
+
+## Overview
+Web-controlled rover for hazardous environment monitoring using Raspberry Pi, sensors, and AI.
+
+## Features
+- Remote control via web
+- Live video streaming
+- Gas detection (MQ5)
+- Obstacle detection (Ultrasonic)
+- Object detection using YOLOv8
+
+## Technologies
+- Raspberry Pi
+- Python
+- OpenCV
+- Flask / Socket.IO
+- HTML, CSS, JS
+
+## Performance
+- Latency: ~5 sec
+- FPS: 30–60
+- Accuracy: ~90%
+
+## Author
+Sopan Kendre
