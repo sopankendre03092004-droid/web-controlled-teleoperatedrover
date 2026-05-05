@@ -1,26 +1,26 @@
-# Intelligent Teleoperated Rover
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rover Control</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body style="text-align:center; font-family:Arial;">
 
-## Overview
-Web-controlled rover for hazardous environment monitoring using Raspberry Pi, sensors, and AI.
+<h2>Rover Control Panel</h2>
 
-## Features
-- Remote control via web
-- Live video streaming
-- Gas detection (MQ5)
-- Obstacle detection (Ultrasonic)
-- Object detection using YOLOv8
+<button onclick="send('w')">Forward</button><br><br>
+<button onclick="send('a')">Left</button>
+<button onclick="send('r')">Stop</button>
+<button onclick="send('d')">Right</button><br><br>
+<button onclick="send('s')">Backward</button>
 
-## Technologies
-- Raspberry Pi
-- Python
-- OpenCV
-- Flask / Socket.IO
-- HTML, CSS, JS
+<script>
+    var socket = io();
 
-## Performance
-- Latency: ~5 sec
-- FPS: 30–60
-- Accuracy: ~90%
+    function send(cmd) {
+        socket.emit("send_command", cmd);
+    }
+</script>
 
-## Author
-Sopan Kendre
+</body>
+</html>
