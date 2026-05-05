@@ -1,0 +1,147 @@
+import RPi.GPIO as GPIO
+import time
+import threading
+from gpiozero import Motor
+import socketio
+
+# =========================
+# AWS SERVER
+# =========================
+SERVER_URL = "http://16.170.230.155:5000"   # Your AWS public IP
+
+sio = socketio.Client()
+
+# =========================
+# Motor Setup
+# =========================
+left_motor = Motor(forward=17, backward=18, enable=12)
+right_motor = Motor(forward=22, backward=23, enable=13)
+
+# =========================
+# Ultrasonic Setup
+# =========================
+GPIO.setmode(GPIO.BCM)
+TRIG = 5
+ECHO = 6
+
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+
+# =========================
+# Movement Functions
+# =========================
+def forward():
+    left_motor.forward()
+    right_motor.forward()
+
+def backward():
+    left_motor.backward()
+    right_motor.backward()
+
+def left():
+    left_motor.backward()
+    right_motor.forward()
+
+def right():
+    left_motor.forward()
+    right_motor.backward()
+
+def stop():
+    left_motor.stop()
+    right_motor.stop()
+
+# =========================
+# Distance Function
+# =========================
+def get_distance():
+    GPIO.output(TRIG, False)
+    time.sleep(0.01)
+
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG, False)
+
+    start = time.time()
+    timeout = start + 0.04
+
+    while GPIO.input(ECHO) == 0 and time.time() < timeout:
+        start = time.time()
+
+    end = time.time()
+    timeout = end + 0.04
+
+    while GPIO.input(ECHO) == 1 and time.time() < timeout:
+        end = time.time()
+
+    duration = end - start
+    distance = duration * 17150
+
+    if distance <= 2 or distance > 400:
+        return 400
+
+    return round(distance, 1)
+
+# =========================
+# Current Command
+# =========================
+current_cmd = "r"   # r = stop
+
+# =========================
+# Socket Events
+# =========================
+@sio.event
+def connect():
+    print("✅ Connected to AWS Server")
+
+@sio.on("command_to_pi")
+def on_command(data):
+    global current_cmd
+    print("Command Received:", data)
+    current_cmd = data
+
+@sio.event
+def disconnect():
+    print("❌ Disconnected from server")
+    stop()
+
+# =========================
+# Motor Control Loop
+# =========================
+def motor_loop():
+    global current_cmd
+
+    while True:
+        dist = get_distance()
+        print("Distance:", dist)
+
+        # Obstacle protection
+        if dist < 30 and current_cmd in ['w','s','a','d']:
+            print("Obstacle detected -> STOP")
+            stop()
+        else:
+            if current_cmd == 'w':      # Forward
+                forward()
+            elif current_cmd == 's':    # Backward
+                backward()
+            elif current_cmd == 'a':    # Left
+                left()
+            elif current_cmd == 'd':    # Right
+                right()
+            elif current_cmd == 'r':    # Stop
+                stop()
+
+        time.sleep(0.1)
+
+# =========================
+# MAIN
+# =========================
+if __name__ == "__main__":
+    try:
+        threading.Thread(target=motor_loop, daemon=True).start()
+        sio.connect(SERVER_URL)
+        sio.wait()
+
+    except KeyboardInterrupt:
+        print("Stopping rover...")
+        stop()
+        GPIO.cleanup()
