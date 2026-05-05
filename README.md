@@ -1,28 +1,64 @@
 # web-controlled-teleoperatedrover
 Web-controlled teleoperated intelligent rover for hazardous environment monitoring using Raspberry Pi, IoT, sensors, and YOLO-based object detection.
-# Intelligent Teleoperated Rover
+# Intelligent Teleoperated Rover 🚗
 
-## Overview
-Web-controlled rover for hazardous environment monitoring using Raspberry Pi, sensors, and AI.
+## 📌 Overview
+This project is a web-controlled teleoperated rover designed for monitoring hazardous environments such as gas leak areas, fire zones, and disaster sites.
 
-## Features
-- Remote control via web
+The system allows users to control the rover remotely and receive real-time video and sensor data.
+
+---
+
+## ⚙️ Features
+- Remote control using web interface
 - Live video streaming
-- Gas detection (MQ5)
-- Obstacle detection (Ultrasonic)
-- Object detection using YOLOv8
+- Gas detection (MQ-5 sensor)
+- Obstacle detection (Ultrasonic sensor)
+- Object detection using YOLO
+- Real-time alerts
 
-## Technologies
+---
+
+## 🧠 Technologies Used
 - Raspberry Pi
 - Python
 - OpenCV
 - Flask / Socket.IO
-- HTML, CSS, JS
+- HTML, CSS, JavaScript
+- IoT
 
-## Performance
-- Latency: ~5 sec
+---
+
+## 🏗️ System Architecture
+- User Interface (Web Control)
+- Communication Layer (WiFi)
+- Rover Unit (Sensors + Raspberry Pi)
+
+---
+
+## 📊 Performance
 - FPS: 30–60
+- Latency: ~5 seconds
 - Accuracy: ~90%
 
-## Author
+---
+
+## 📷 Project Output
+(Add your images here)
+
+![Block Diagram](images/block_diagram.png)
+![Flowchart](images/flowchart.png)
+![Control Page](images/ui.png)
+
+---
+
+## 🚀 Applications
+- Industrial safety
+- Disaster monitoring
+- Surveillance
+- Hazard detection
+
+---
+
+## 👨‍💻 Author
 Sopan Kendre
